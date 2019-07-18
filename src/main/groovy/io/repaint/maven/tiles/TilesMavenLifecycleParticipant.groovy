@@ -75,9 +75,9 @@ import org.eclipse.aether.impl.VersionRangeResolver
 import org.eclipse.aether.resolution.VersionRangeRequest
 import org.xml.sax.SAXParseException
 
-import static io.repaint.maven.tiles.Constants.TILEPLUGIN_ARTIFACT
-import static io.repaint.maven.tiles.Constants.TILEPLUGIN_GROUP
 import static io.repaint.maven.tiles.Constants.TILE_POM
+import static io.repaint.maven.tiles.Constants.tilePluginId
+import static io.repaint.maven.tiles.Constants.isTilePlugin
 import static io.repaint.maven.tiles.GavUtil.artifactGav
 import static io.repaint.maven.tiles.GavUtil.artifactName
 import static io.repaint.maven.tiles.GavUtil.modelGav
@@ -96,8 +96,6 @@ import static io.repaint.maven.tiles.GavUtil.parentGav
 @CompileStatic
 @Component(role = AbstractMavenLifecycleParticipant, hint = "TilesMavenLifecycleParticipant")
 public class TilesMavenLifecycleParticipant extends AbstractMavenLifecycleParticipant {
-
-	public static final String TILEPLUGIN_KEY = "${TILEPLUGIN_GROUP}:${TILEPLUGIN_ARTIFACT}"
 
 	@Requirement
 	Logger logger
@@ -301,10 +299,11 @@ public class TilesMavenLifecycleParticipant extends AbstractMavenLifecyclePartic
 		List<MavenProject> allProjects = mavenSession.getProjects()
 		if (allProjects != null) {
 			for (MavenProject currentProject : allProjects) {
-				boolean containsTiles = currentProject.getPluginArtifactMap().keySet().contains(TILEPLUGIN_KEY)
 
-				if (containsTiles) {
-					Plugin plugin = currentProject.getPlugin(TILEPLUGIN_KEY);
+                String tilePluginId = tilePluginId(currentProject.getPluginArtifactMap().keySet())
+
+				if (tilePluginId) {
+					Plugin plugin = currentProject.getPlugin(tilePluginId);
 					List<String> subModules = currentProject.getModules()
 					if (plugin.isInherited() && subModules != null && subModules.size() > 0) {
 						Model currentModel = currentProject.getModel();
@@ -821,7 +820,7 @@ public class TilesMavenLifecycleParticipant extends AbstractMavenLifecyclePartic
 	@CompileStatic(TypeCheckingMode.SKIP)
 	protected void parseConfiguration(Model model, File pomFile) {
 		def configuration = model.build?.plugins
-			?.find({ Plugin plugin -> plugin.groupId == TILEPLUGIN_GROUP && plugin.artifactId == TILEPLUGIN_ARTIFACT})
+			?.find({ Plugin plugin -> isTilePlugin(plugin) })
 			?.configuration
 
 		if (configuration) {

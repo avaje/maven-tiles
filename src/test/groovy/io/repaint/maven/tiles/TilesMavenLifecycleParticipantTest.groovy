@@ -49,7 +49,7 @@ import org.sonatype.plexus.build.incremental.DefaultBuildContext
 
 import static groovy.test.GroovyAssert.shouldFail
 import static io.repaint.maven.tiles.Constants.TILEPLUGIN_ARTIFACT
-import static io.repaint.maven.tiles.Constants.TILEPLUGIN_GROUP
+import static io.repaint.maven.tiles.Constants.TILEPLUGIN_GROUP0
 import static io.repaint.maven.tiles.GavUtil.artifactName
 import static org.junit.Assert.assertEquals
 import static org.mockito.Mockito.mock
@@ -241,7 +241,7 @@ public class TilesMavenLifecycleParticipantTest {
 		model.build.directory = "target/filtering"
 		model.build.addPlugin(new Plugin())
 		model.build.plugins[0].with {
-			groupId = TILEPLUGIN_GROUP
+			groupId = TILEPLUGIN_GROUP0
 			artifactId = TILEPLUGIN_ARTIFACT
 			configuration = Xpp3DomBuilder.build(new StringReader("<configuration><filtering>true</filtering><generatedSourcesDirectory>target/filtering/generated-tiles</generatedSourcesDirectory></configuration>"))
 		}
@@ -276,7 +276,7 @@ public class TilesMavenLifecycleParticipantTest {
 		model.build.directory = "target/filtering"
 		model.build.addPlugin(new Plugin())
 		model.build.plugins[0].with {
-			groupId = TILEPLUGIN_GROUP
+			groupId = TILEPLUGIN_GROUP0
 			artifactId = TILEPLUGIN_ARTIFACT
 		}
 
@@ -480,7 +480,7 @@ public class TilesMavenLifecycleParticipantTest {
 		model.build = new Build()
 		model.build.addPlugin(new Plugin())
 		model.build.plugins[0].with {
-			groupId = TILEPLUGIN_GROUP
+			groupId = TILEPLUGIN_GROUP0
 			artifactId = TILEPLUGIN_ARTIFACT
 			// bad GAV
 			configuration = Xpp3DomBuilder.build(new StringReader("<configuration><tiles><tile>${gav}</tile></tiles></configuration>"))

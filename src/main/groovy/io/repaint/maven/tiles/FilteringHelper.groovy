@@ -11,9 +11,8 @@ import org.apache.maven.shared.filtering.MavenFileFilterRequest
 import org.apache.maven.shared.filtering.MavenResourcesExecution
 import org.apache.maven.shared.filtering.MavenResourcesFiltering
 
-import static io.repaint.maven.tiles.Constants.TILEPLUGIN_ARTIFACT
-import static io.repaint.maven.tiles.Constants.TILEPLUGIN_GROUP
 import static io.repaint.maven.tiles.Constants.TILE_POM
+import static io.repaint.maven.tiles.Constants.isTilePlugin
 
 @CompileStatic
 class FilteringHelper {
@@ -25,7 +24,7 @@ class FilteringHelper {
                         final MavenResourcesFiltering mavenResourcesFiltering) {
         // determine whether filtering is enabled
         def configuration = project.build.plugins
-            ?.find({ Plugin plugin -> plugin.groupId == TILEPLUGIN_GROUP && plugin.artifactId == TILEPLUGIN_ARTIFACT})
+            ?.find({ Plugin plugin -> isTilePlugin(plugin) })
             ?.configuration
 
         final boolean filtering = configuration?.getChild("filtering")?.getValue() == "true"

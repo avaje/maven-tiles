@@ -17,8 +17,7 @@ import org.apache.maven.project.ProjectBuildingRequest
 import org.apache.maven.project.ProjectBuildingResult
 import org.codehaus.plexus.component.annotations.Component
 
-import static io.repaint.maven.tiles.Constants.TILEPLUGIN_ARTIFACT
-import static io.repaint.maven.tiles.Constants.TILEPLUGIN_GROUP
+import static io.repaint.maven.tiles.Constants.isTilePlugin
 
 @CompileStatic
 @Component(role = ProjectBuilder.class, hint = "TilesProjectBuilder")
@@ -53,7 +52,7 @@ class TilesProjectBuilder extends DefaultProjectBuilder {
 	private static ProjectBuildingResult injectTileDependecies(ProjectBuildingResult result) {
 		MavenProject project = result.project
 		def configuration = project.build.plugins
-			?.find({ Plugin plugin -> plugin.groupId == TILEPLUGIN_GROUP && plugin.artifactId == TILEPLUGIN_ARTIFACT})
+			?.find({ Plugin plugin -> isTilePlugin(plugin) })
 			?.configuration
 
 		if (configuration) {
